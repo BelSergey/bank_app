@@ -64,9 +64,7 @@ def main_page(transactions: pd.DataFrame, date_time_str: Optional[str] = None) -
         ],
         "top_transactions": [
             {
-                "date": (
-                    t.get("Дата операции").strftime("%d.%m.%Y") if isinstance(t.get("Дата операции"), datetime) else ""
-                ),
+                "date": (d.strftime("%d.%m.%Y") if isinstance((d := t.get("Дата операции")), datetime) else ""),
                 "amount": abs(t.get("Сумма платежа", 0)),
                 "category": t.get("Категория", ""),
                 "description": t.get("Описание", ""),

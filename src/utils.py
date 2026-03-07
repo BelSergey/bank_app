@@ -3,11 +3,11 @@ import logging
 import os
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 
 import pandas as pd
 import requests
-import yfinance as yf
+import yfinance as yf # type: ignore
 from dotenv import load_dotenv
 from tabulate import tabulate
 
@@ -121,7 +121,7 @@ def load_user_settings() -> Dict[str, List[str]]:
         return {"user_currencies": ["USD", "EUR"], "user_stocks": ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"]}
 
 
-def get_top_transactions_by_card(df: pd.DataFrame, card_number: str, limit: int = 3) -> List[Dict]:
+def get_top_transactions_by_card(df: pd.DataFrame, card_number: str, limit: int = 5) -> List[Dict]:
     """Возвращает топ-N транзакций по сумме (по модулю) для указанной карты."""
 
     if df.empty:
@@ -144,14 +144,14 @@ def get_top_transactions_by_card(df: pd.DataFrame, card_number: str, limit: int 
     return result
 
 
-def print_section(title: str):
+def print_section(title: str) -> None:
     """Печатает заголовок раздела."""
     print("\n" + "=" * 60)
     print(f" {title}")
     print("=" * 60)
 
 
-def print_cards(cards_data):
+def print_cards(cards_data: List[Dict[str, Any]]) -> None:
     """Выводит информацию по картам в виде таблицы."""
     if not cards_data:
         print("Нет данных по картам.")
@@ -162,7 +162,7 @@ def print_cards(cards_data):
     print(tabulate(table, headers=["Карта (посл. 4 цифры)", "Расходы, руб", "Кешбэк, руб"], tablefmt="grid"))
 
 
-def print_top_transactions(transactions):
+def print_top_transactions(transactions: List[Dict[str, Any]]) -> None:
     """Выводит топ-5 транзакций."""
     if not transactions:
         print("Нет транзакций.")
@@ -173,7 +173,7 @@ def print_top_transactions(transactions):
     print(tabulate(table, headers=["Дата", "Сумма", "Категория", "Описание"], tablefmt="grid"))
 
 
-def print_currency_rates(rates):
+def print_currency_rates(rates: Dict[str, float]) -> None:
     """Выводит курсы валют."""
     if not rates:
         print("Курсы валют не получены.")
@@ -182,7 +182,7 @@ def print_currency_rates(rates):
         print(f"  {cur}: {rate:.2f} руб")
 
 
-def print_stock_prices(prices):
+def print_stock_prices(prices: Dict[str, float]) -> None:
     """Выводит цены акций."""
     if not prices:
         print("Цены акций не получены.")
@@ -191,7 +191,7 @@ def print_stock_prices(prices):
         print(f"  {stock}: ${price:.2f}")
 
 
-def print_categories(cat_list, title):
+def print_categories(cat_list: List[Dict[str, Any]], title: str) -> None:
     """Выводит список категорий с суммами (универсальный доступ к ключам)."""
     if not cat_list:
         print(f"  {title}: нет данных")

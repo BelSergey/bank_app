@@ -2,8 +2,8 @@ import functools
 import json
 import logging
 from datetime import datetime
-from typing import Optional
-from typing import Callable, Any, Optional
+from typing import Any, Callable, Optional
+
 import pandas as pd
 from pandas.tseries.offsets import DateOffset
 

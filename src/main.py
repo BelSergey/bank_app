@@ -3,7 +3,7 @@ import logging
 from datetime import datetime
 
 import pandas as pd
-
+from typing import List, Dict, Any
 from src import reports, services, utils, views
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -106,8 +106,12 @@ def main():
         print(f"  {stock['stock']}: ${stock['price']:.2f}")
 
     utils.print_section("ПРОСТОЙ ПОИСК")
-    search_string = input("Введите слово для поиска: " ).split()
-    search_result = services.simple_search("перевод", transactions_list)
+    search_string = input("Введите слово для поиска: ").strip()
+    transactions_list_str_keys: List[Dict[str, Any]] = [
+        {str(k): v for k, v in record.items()}
+        for record in transactions_df.to_dict("records")
+    ]
+    search_result = services.simple_search(search_string, transactions_list_str_keys)
     found = json.loads(search_result)
     print(f"Найдено транзакций: {len(found)}")
     if found:

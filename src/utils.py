@@ -182,6 +182,21 @@ def print_currency_rates(rates: Dict[str, float]) -> None:
         print(f"  {cur}: {rate:.2f} руб")
 
 
+def get_stock_prices(tickers: List[str]) -> Dict[str, float]:
+    """Получает цены акций через yfinance."""
+    try:
+        data = yf.download(tickers, period="1d", interval="1d", progress=False)
+        if data.empty:
+            return {}
+        if len(tickers) == 1:
+            return {tickers[0]: float(data.iloc[-1])}
+        else:
+            close_prices = data.xs('Close', axis=1, level=1).iloc[-1]
+            return close_prices.to_dict()
+    except Exception as e:
+        logger.exception(f"Ошибка получения цен акций: {e}")
+        return {}
+
 def print_stock_prices(prices: Dict[str, float]) -> None:
     """Выводит цены акций."""
     if not prices:
